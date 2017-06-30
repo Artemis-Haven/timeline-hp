@@ -40,7 +40,7 @@ db.once('open', () => {
 
 let socketServer = http.createServer(app);
 let io = socket(socketServer);
-global.io = io;
+global['io'] = io;
 socketServer.listen(8090, "localhost");
 
 export { app };
