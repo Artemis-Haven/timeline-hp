@@ -1,0 +1,49 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card" *ngIf="!isLoading">
+  <h4 class="card-header"><!-- Parties en cours --> List ({{games.length}})</h4>
+  <div class="card-block">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+        <tr>
+          <th>Nom</th>
+          <th>Créée le</th>
+          <th><!-- Participants --> Users</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="games.length === 0">
+        <tr>
+          <td colspan="4"><!-- Aucune partie en cours. Créez une nouvelle partie. --> No item</td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="!isEditing">
+        <tr *ngFor="let game of games">
+          <td>{{game.name}}</td>
+          <td>{{game.createdAt|date:'dd/MM/yyyy'}}</td>
+          <td>{{game.users.length}} <!-- joueur(s) --></td>
+          <td>
+            <button class="btn btn-sm btn-success" (click)="joinGame(game)" *ngIf="!hasJoined(auth.currentUser, game)"><i class="fa fa-check"></i> <!--Rejoindre-->Join</button>
+            <button class="btn btn-sm btn-warning" (click)="quitGame(game)" *ngIf="hasJoined(auth.currentUser, game)"><i class="fa fa-times"></i> <!--Quitter la partie-->Quit</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteGame(game)"><i class="fa fa-trash"></i> Supprimer</button>
+          </td>
+        </tr>  
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" *ngIf="!isEditing">
+  <h4 class="card-header"><!--Nouvelle partie-->New</h4>
+  <div class="card-block">
+    <form class="form-inline" [formGroup]="addGameForm" (ngSubmit)="addGame()" style="text-align:center">
+      <div class="form-group">
+          <input class="form-control" type="text" name="name" formControlName="name">
+          <!--  placeholder="Donnez un nom à la partie" -->
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="!addGameForm.valid">Créer</button>
+    </form>
+  </div>
+</div>

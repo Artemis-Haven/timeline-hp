@@ -43,8 +43,9 @@ abstract class BaseCtrl {
 
   // Update by id
   update = (req, res) => {
-    this.model.findOneAndUpdate({ _id: req.params.id }, req.body, (err) => {
+    this.model.findOneAndUpdate({ _id: req.params.id }, {cards: req.body.cards, users: req.body.users}, (err) => {
       if (err) { return console.error(err); }
+      global.io.emit('games-updated', { msg: 'Welcome bro!' });
       res.sendStatus(200);
     });
   };

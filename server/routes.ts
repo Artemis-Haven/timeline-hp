@@ -1,8 +1,10 @@
 import * as express from 'express';
 
 import CatCtrl from './controllers/cat';
+import GameCtrl from './controllers/game';
 import UserCtrl from './controllers/user';
 import Cat from './models/cat';
+import Game from './models/game';
 import User from './models/user';
 
 export default function setRoutes(app) {
@@ -10,6 +12,7 @@ export default function setRoutes(app) {
   const router = express.Router();
 
   const catCtrl = new CatCtrl();
+  const gameCtrl = new GameCtrl();
   const userCtrl = new UserCtrl();
 
   // Cats
@@ -19,6 +22,16 @@ export default function setRoutes(app) {
   router.route('/cat/:id').get(catCtrl.get);
   router.route('/cat/:id').put(catCtrl.update);
   router.route('/cat/:id').delete(catCtrl.delete);
+
+  // Games
+  router.route('/games').get(gameCtrl.getAll);
+  router.route('/games/count').get(gameCtrl.count);
+  router.route('/game').post(gameCtrl.insert);
+  router.route('/game/:id').get(gameCtrl.get);
+  router.route('/game/join/:id').put(gameCtrl.join);
+  router.route('/game/quit/:id').put(gameCtrl.quit);
+  router.route('/game/:id').put(gameCtrl.update);
+  router.route('/game/:id').delete(gameCtrl.delete);
 
   // Users
   router.route('/login').post(userCtrl.login);
