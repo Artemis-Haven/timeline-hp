@@ -8,6 +8,7 @@ import * as http from 'http';
 import * as socket from 'socket.io';
 
 import setRoutes from './routes';
+import Game from './models/game';
 
 const app = express();
 dotenv.load({ path: '.env' });
@@ -42,5 +43,35 @@ let socketServer = http.createServer(app);
 let io = socket(socketServer);
 global['io'] = io;
 socketServer.listen(8090, "localhost");
+io.on('connection', function (socket) {
+
+  //socket.broadcast.emit('notification', {level: 'info', message:'Welcome!'});
+  //socket.emit('notification', {level: 'info', message:'Welcome!'});
+
+  socket.on('initSocket',function(data){
+  	Game.find({users: { "$in" : [data.id]}}, (err, games) => {
+  	  if (err) { return console.error(err); }
+	  for (var i = 0; i < games.length; i++) {
+	    socket.join('game '+games[i]._id);
+	  }
+  	});
+  });
+
+  socket.on('joinedGame',function(data){
+  	io.to('game '+data.id).emit('notification', {level: 'info', message:'A new player joined game!'});
+    socket.join('game '+data.id);
+  	console.log("Socket joined game "+data.id);
+  });
+
+  socket.on('leavedGame',function(data){
+    socket.leave('game '+data.id);
+  	io.to('game '+data.id).emit('notification', {level: 'info', message:'A player leaved game!'});
+  });
+
+  socket.on('updatedGame',function(data){
+    socket.leave('game '+data.id);
+  	io.to('game '+data.id).emit('notification', {level: 'info', message:data.message});
+  });
+});
 
 export { app };

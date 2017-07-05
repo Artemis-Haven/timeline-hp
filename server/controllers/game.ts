@@ -18,37 +18,55 @@ export default class GameCtrl extends BaseCtrl {
         return console.error(err);
       }
       console.log("Nouvelle partie '+this.model.name+' créée !");
+      global['io'].emit('games-updated', { msg: 'Welcome bro!' });
+      global['io'].emit('message', { message: 'Welcome bro!', label: 'info' });
       res.status(200).json(item);
     });
   };
 
   // join game
   join = (req, res) => {
-	  console.log(JSON.stringify(req.body));
-  	this.model.findOne({ _id: req.params.id }, (err, game) => {
+  	this.model.findOne({ _id: req.params.game_id }, (err, game) => {
       if (err) { return console.error(err); }
-
-	  console.log(Object.keys(req.body));
-	  console.log(JSON.stringify(req.body));
-	  console.log(JSON.stringify(game));
-	  game.users.push(req.body._id);
-	  /*this.model.findOneAndUpdate({ _id: req.params.id }, game, (err) => {
-	    if (err) { return console.error(err); }
-	    res.sendStatus(200);
-	  });*/
+  	  game.users.push(req.params.user_id);
+      game.save((err, game) => {
+        if (err) { return console.error(err); }
+        global['io'].emit('games-updated', { msg: 'Welcome bro!' });
+        res.status(200).json(game);
+      });
     });
   };
 
   // quit game
   quit = (req, res) => {
-	  console.log(JSON.stringify(req.body));
-  	this.model.findOne({ _id: req.params.id }, (err, game) => {
+    this.model.findOne({ _id: req.params.game_id }, (err, game) => {
       if (err) { return console.error(err); }
+      game.users.splice(game.users.indexOf(req.params.user_id), 1);
+      game.save((err, game) => {
+        if (err) { return console.error(err); }
+        global['io'].emit('games-updated', { msg: 'Welcome bro!' });
+        res.status(200).json(game);
+      });
+    });
+  };
 
-	  console.log(Object.keys(req.body));
-	  console.log(JSON.stringify(req.body));
-	  console.log(JSON.stringify(game));
-	  game.users.pop(req.body._id);
+  // Update by id
+  update = (req, res) => {
+    delete req.body._id;
+    this.model.findOneAndUpdate({ _id: req.params.id }, req.body, (err) => {
+      if (err) { return console.error(err); }
+      global['io'].emit('games-updated', { msg: 'Welcome bro!' });
+      //global['io'].emit('game-updated-'+req.params.id, { msg: 'Welcome bro!' });
+      res.sendStatus(200);
+    });
+  };
+
+  // Delete by id
+  delete = (req, res) => {
+    this.model.findOneAndRemove({ _id: req.params.id }, (err) => {
+      if (err) { return console.error(err); }
+      global['io'].emit('games-updated', { msg: 'Welcome bro!' });
+      res.sendStatus(200);
     });
   };
 }

@@ -28,8 +28,8 @@ export default function setRoutes(app) {
   router.route('/games/count').get(gameCtrl.count);
   router.route('/game').post(gameCtrl.insert);
   router.route('/game/:id').get(gameCtrl.get);
-  router.route('/game/join/:id').put(gameCtrl.join);
-  router.route('/game/quit/:id').put(gameCtrl.quit);
+  router.route('/game/join/:game_id/:user_id').put(gameCtrl.join);
+  router.route('/game/quit/:game_id/:user_id').put(gameCtrl.quit);
   router.route('/game/:id').put(gameCtrl.update);
   router.route('/game/:id').delete(gameCtrl.delete);
 

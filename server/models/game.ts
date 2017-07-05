@@ -7,8 +7,13 @@ const gameSchema = new mongoose.Schema({
     default: 'Nouvelle partie'
   },
   createdAt: {
-  	type: Date,
-  	require: true
+    type: Date,
+    require: true
+  },
+  started: {
+    type: Boolean,
+    require: true,
+    default: false
   },
   users: [{
     type: mongoose.Schema.Types.ObjectId,

@@ -10,7 +10,8 @@ import { Socket } from 'ng-socket-io';
 @Component({
   selector: 'app-games',
   templateUrl: './games.component.html',
-  styleUrls: ['../cats/cats.component.scss']
+  styleUrls: ['../cats/cats.component.scss'],
+  providers: [GameService]
 })
 export class GamesComponent implements OnInit {
 
@@ -18,6 +19,7 @@ export class GamesComponent implements OnInit {
   games = [];
   isLoading = false;
   isEditing = false;
+  msg : string;
 
   addGameForm: FormGroup;
   name = new FormControl('', Validators.required);
@@ -34,6 +36,8 @@ export class GamesComponent implements OnInit {
       alert('connection !');
     });
     this.socket.on('games-updated', function() { that.getGames(); });
+    this.socket.on('notification', function(data) { that.toast.setMessage(data.message, data.level); });
+    this.socket.emit('initSocket', {id: this.auth.currentUser._id});
   }
 
   ngOnInit() {
@@ -58,6 +62,7 @@ export class GamesComponent implements OnInit {
         this.games.push(newGame);
         this.addGameForm.reset();
         this.toast.setMessage('item added successfully.', 'success');
+        this.socket.emit('joinedGame', {id: newGame._id});
       },
       error => console.log(error)
     );
@@ -65,46 +70,53 @@ export class GamesComponent implements OnInit {
 
   joinGame(game) {
     game.users.push(this.auth.currentUser._id);
-    this.gameService.editGame(game).subscribe(
+    this.gameService.joinGame(game, this.auth.currentUser).subscribe(
       res => {
         this.game = game;
         this.toast.setMessage('you joined successfully.', 'success');
+        this.socket.emit('joinedGame', {id: game._id});
       },
       error => console.log(error)
     );
+  }
+
+  startGame(game) {
+    if (game.users.indexOf(this.auth.currentUser._id) != -1) {
+      game.started = true;
+      this.editGame(game);
+      this.socket.emit('updatedGame', {id: game._id, message: 'Game started!' });
+    } else {
+      this.toast.setMessage("you don't own this game.", 'error');
+    }
   }
 
   quitGame(game) {
-    game.users.pop(this.auth.currentUser._id);
-    this.gameService.editGame(game).subscribe(
-      res => {
-        this.game = game;
-        this.toast.setMessage('you quitted successfully.', 'info');
-      },
-      error => console.log(error)
-    );
+    if (game.users.indexOf(this.auth.currentUser._id) != -1) {
+      if (game.users.length == 1) {
+        this.deleteGame(game);
+        this.socket.emit('leavedGame', {id: game._id});
+      } else {
+        game.users.splice(game.users.indexOf(this.auth.currentUser._id), 1);
+        this.gameService.quitGame(game, this.auth.currentUser).subscribe(
+          res => {
+            this.game = game;
+            this.toast.setMessage('you quitted successfully.', 'info');
+            this.socket.emit('leavedGame', {id: game._id});
+          },
+          error => console.log(error)
+        );
+      }
+    } else {
+      this.toast.setMessage("you don't own this game.", 'error');
+    }
   }
-
-  /*joinGame(game) {
-    this.gameService.joinGame(game, this.auth.currentUser).subscribe(
-      res => {
-        this.toast.setMessage('item added successfully.', 'success');
-      },
-      error => console.log(error)
-    );
-  }
-
-  quitGame(game) {
-    this.gameService.quitGame(game, this.auth.currentUser).subscribe(
-      res => {
-        this.toast.setMessage('item added successfully.', 'success');
-      },
-      error => console.log(error)
-    );
-  }*/
 
   hasJoined(user, game) {
     return game.users.indexOf(user._id) !== -1;
+  }
+
+  isDeletable(game) {
+    return this.hasJoined(this.auth.currentUser, game) && !game.started && (game.users.length == 1);
   }
 
   enableEditing(game) {
@@ -133,6 +145,7 @@ export class GamesComponent implements OnInit {
 
   deleteGame(game) {
     if (window.confirm('Are you sure you want to permanently delete this item?')) {
+      game.users.splice(game.users.indexOf(this.auth.currentUser._id), 1);
       this.gameService.deleteGame(game).subscribe(
         res => {
           const pos = this.games.map(elem => elem._id).indexOf(game._id);
