@@ -1,0 +1,18 @@
+Hello!
+<ul>
+  <li>{{game.name}}</li>
+  <li>{{game.createdAt|date:'dd/MM/yyyy'}}</li>
+  <li>{{game.users.length}} <!-- joueur(s) --></li>
+</ul>
+
+<ul *ngFor="let user of game.users">
+  <li>{{user.username}}</li>
+</ul>
+
+<ul *ngFor="let card of game.cards">
+  <li>{{card.name}}</li>
+</ul>
+
+<ul *ngIf="game.cards.length === 0">
+  <li>No card</li>
+</ul>

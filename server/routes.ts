@@ -2,9 +2,11 @@ import * as express from 'express';
 
 import CatCtrl from './controllers/cat';
 import GameCtrl from './controllers/game';
+import CardCtrl from './controllers/card';
 import UserCtrl from './controllers/user';
 import Cat from './models/cat';
 import Game from './models/game';
+import Card from './models/card';
 import User from './models/user';
 
 export default function setRoutes(app) {
@@ -13,6 +15,7 @@ export default function setRoutes(app) {
 
   const catCtrl = new CatCtrl();
   const gameCtrl = new GameCtrl();
+  const cardCtrl = new CardCtrl();
   const userCtrl = new UserCtrl();
 
   // Cats

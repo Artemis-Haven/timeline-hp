@@ -41,7 +41,10 @@ export default class GameCtrl extends BaseCtrl {
   quit = (req, res) => {
     this.model.findOne({ _id: req.params.game_id }, (err, game) => {
       if (err) { return console.error(err); }
-      game.users.splice(game.users.indexOf(req.params.user_id), 1);
+      console.log(req.params.user_id);
+      console.log(game.users.map(user => user._id.toString());
+      console.log(game.users.map(user => user._id.toString()).indexOf(req.params.user_id));
+      game.users.splice(game.users.map(user => user._id.toString()).indexOf(req.params.user_id), 1);
       game.save((err, game) => {
         if (err) { return console.error(err); }
         global['io'].emit('games-updated', { msg: 'Welcome bro!' });

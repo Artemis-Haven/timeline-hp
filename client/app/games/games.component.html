@@ -23,11 +23,19 @@
         <tr *ngFor="let game of games">
           <td>{{game.name}}</td>
           <td>{{game.createdAt|date:'dd/MM/yyyy'}}</td>
-          <td>{{game.users.length}} <!-- joueur(s) --></td>
+          <td>
+            {{game.users.length}} <!-- joueur(s) -->
+            <span *ngIf="game.users.length"> :
+              <span *ngFor="let user of game.users; let last = last" >
+                {{user.username}}{{last?"":","}}
+              </span>  
+            </span>
+          </td>
           <td>
             <button class="btn btn-sm btn-success" (click)="joinGame(game)" *ngIf="!hasJoined(auth.currentUser, game) && !game.started"><i class="fa fa-plus"></i> <!--Rejoindre-->Join</button>
             <button class="btn btn-sm btn-warning" (click)="quitGame(game)" *ngIf="hasJoined(auth.currentUser, game)"><i class="fa fa-times"></i> <!--Quitter la partie-->Quit</button>
-            <button class="btn btn-sm btn-success" (click)="startGame(game)" *ngIf="hasJoined(auth.currentUser, game) && !game.started"><i class="fa fa-check"></i>Start</button>
+            <button class="btn btn-sm btn-success" (click)="startGame(game)" *ngIf="hasJoined(auth.currentUser, game) && !game.started"><i class="fa fa-check"></i> Start</button>
+            <a class="btn btn-sm btn-primary" [routerLink]="['/game', game._id]" *ngIf="hasJoined(auth.currentUser, game) && game.started"><i class="fa fa-sign-in"></i> Enter</a>
           </td>
         </tr>  
       </tbody>

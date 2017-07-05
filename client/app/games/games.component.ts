@@ -19,7 +19,6 @@ export class GamesComponent implements OnInit {
   games = [];
   isLoading = false;
   isEditing = false;
-  msg : string;
 
   addGameForm: FormGroup;
   name = new FormControl('', Validators.required);
@@ -32,9 +31,6 @@ export class GamesComponent implements OnInit {
               private socket: Socket) 
   {
     var that = this;
-    this.socket.on('connection', function() {
-      alert('connection !');
-    });
     this.socket.on('games-updated', function() { that.getGames(); });
     this.socket.on('notification', function(data) { that.toast.setMessage(data.message, data.level); });
     this.socket.emit('initSocket', {id: this.auth.currentUser._id});
@@ -69,7 +65,7 @@ export class GamesComponent implements OnInit {
   }
 
   joinGame(game) {
-    game.users.push(this.auth.currentUser._id);
+    game.users.push(this.auth.currentUser);
     this.gameService.joinGame(game, this.auth.currentUser).subscribe(
       res => {
         this.game = game;
@@ -81,7 +77,7 @@ export class GamesComponent implements OnInit {
   }
 
   startGame(game) {
-    if (game.users.indexOf(this.auth.currentUser._id) != -1) {
+    if (this.hasJoined(this.auth.currentUser, game)) {
       game.started = true;
       this.editGame(game);
       this.socket.emit('updatedGame', {id: game._id, message: 'Game started!' });
@@ -91,12 +87,12 @@ export class GamesComponent implements OnInit {
   }
 
   quitGame(game) {
-    if (game.users.indexOf(this.auth.currentUser._id) != -1) {
+    if (this.hasJoined(this.auth.currentUser, game)) {
       if (game.users.length == 1) {
         this.deleteGame(game);
         this.socket.emit('leavedGame', {id: game._id});
       } else {
-        game.users.splice(game.users.indexOf(this.auth.currentUser._id), 1);
+        game.users.splice(game.users.map(user => user._id).indexOf(this.auth.currentUser._id), 1);
         this.gameService.quitGame(game, this.auth.currentUser).subscribe(
           res => {
             this.game = game;
@@ -112,7 +108,7 @@ export class GamesComponent implements OnInit {
   }
 
   hasJoined(user, game) {
-    return game.users.indexOf(user._id) !== -1;
+    return game.users.map(user => user._id).indexOf(user._id) !== -1;
   }
 
   isDeletable(game) {
@@ -145,7 +141,7 @@ export class GamesComponent implements OnInit {
 
   deleteGame(game) {
     if (window.confirm('Are you sure you want to permanently delete this item?')) {
-      game.users.splice(game.users.indexOf(this.auth.currentUser._id), 1);
+      game.users.splice(game.users.indexOf(this.auth.currentUser), 1);
       this.gameService.deleteGame(game).subscribe(
         res => {
           const pos = this.games.map(elem => elem._id).indexOf(game._id);

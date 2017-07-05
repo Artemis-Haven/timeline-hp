@@ -50,12 +50,4 @@ export class GameService {
   }
 
 
-  sendMessage(msg: string){
-    //this.socket.emit("message", msg);
-  }
-  
-  getMessage() {
-    //return this.socket.fromEvent<any>("message").map( data => data );
-  }
-
 }

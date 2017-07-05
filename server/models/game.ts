@@ -34,6 +34,16 @@ gameSchema.pre('update', function(next) {
   next();
 });
 
+gameSchema.pre('find', function (next) {
+    this.populate('users cards');
+    next();
+});
+
+gameSchema.pre('findOne', function (next) {
+    this.populate('users cards');
+    next();
+});
+
 const Game = mongoose.model('Game', gameSchema);
 
 export default Game;
