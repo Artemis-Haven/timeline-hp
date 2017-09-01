@@ -38,6 +38,14 @@ export default function setRoutes(app) {
   router.route('/game/:id').put(gameCtrl.update);
   router.route('/game/:id').delete(gameCtrl.delete);
 
+  // Cards
+  router.route('/cards').get(cardCtrl.getAll);
+  router.route('/cards/count').get(cardCtrl.count);
+  router.route('/card').post(cardCtrl.insert);
+  router.route('/card/:id').get(cardCtrl.get);
+  router.route('/card/:id').put(cardCtrl.update);
+  router.route('/card/:id').delete(cardCtrl.delete);
+
   // Users
   router.route('/login').post(userCtrl.login);
   router.route('/users').get(userCtrl.getAll);

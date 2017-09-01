@@ -27,3 +27,14 @@ Board :
 <ul *ngFor="let card of game.boardCards">
   <li>{{card.name}}</li>
 </ul>
+<br>
+
+Hand :
+<ul *ngFor="let card of game.handCards">
+  <li *ngIf="card.user == auth.currentUser._id">
+  	<div (mousedown)="selectCard(card, true)" (mouseup)="selectCard(card, false)" (focusout)="selectCard(card, false)">
+      <span *ngIf="!card.selected">{{card.name}}</span>
+      <strong *ngIf="card.selected">{{card.name}}</strong>
+    </div>
+  </li>
+</ul>

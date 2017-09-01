@@ -20,6 +20,7 @@ export class GameComponent implements OnInit {
   isLoading = false;
 
   constructor(private gameService: GameService,
+              private cardService: CardService,
               private http: Http,
               public toast: ToastComponent,
               public auth: AuthService,
@@ -56,6 +57,18 @@ export class GameComponent implements OnInit {
       },
       error => console.log(error)
     );
+  }
+
+  selectCard(card, select) {
+    if (card.user != this.auth.currentUser._id) {
+      this.toast.setMessage("you don't own this card.", 'error');
+    } else {
+      card.selected = select;
+      this.cardService.editCard(card).subscribe(
+        res => { },
+        error => console.log(error)
+      );
+    }
   }
 
   start(game) {
