@@ -76,16 +76,6 @@ export class GamesComponent implements OnInit {
     );
   }
 
-  startGame(game) {
-    if (this.hasJoined(this.auth.currentUser, game)) {
-      game.started = true;
-      this.editGame(game);
-      this.socket.emit('updatedGame', {id: game._id, message: 'Game started!' });
-    } else {
-      this.toast.setMessage("you don't own this game.", 'error');
-    }
-  }
-
   quitGame(game) {
     if (this.hasJoined(this.auth.currentUser, game)) {
       if (game.users.length == 1) {

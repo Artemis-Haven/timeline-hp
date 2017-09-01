@@ -1,18 +1,29 @@
-Hello!
 <ul>
-  <li>{{game.name}}</li>
+  <li><strong>Infos sur <em>{{game.name}}</em></strong></li>
   <li>{{game.createdAt|date:'dd/MM/yyyy'}}</li>
-  <li>{{game.users.length}} <!-- joueur(s) --></li>
+  <li>{{game.users.length}}p. <!-- joueur(s) --></li>
 </ul>
 
+<button class="btn btn-sm btn-success" (click)="start(game)" *ngIf="!game.started">Start</button>
+<strong class="text-success" *ngIf="game.started">Started!</strong>
+<br>
+
+Users :
 <ul *ngFor="let user of game.users">
   <li>{{user.username}}</li>
+  <ul *ngFor="let card of game.handCards">
+    <li *ngIf="card.user == user._id">{{card.name}}</li>
+  </ul>
 </ul>
+<br>
 
-<ul *ngFor="let card of game.cards">
+Deck : {{game.deckCards.length}} item(s) <button class="btn btn-sm btn-primary" (click)="drawCard(game)" *ngIf="game.deckCards.length > 0">Draw</button>
+<br>
+
+Board :
+<ul *ngIf="game.boardCards.length === 0">
+  <li>No card on board</li>
+</ul>
+<ul *ngFor="let card of game.boardCards">
   <li>{{card.name}}</li>
-</ul>
-
-<ul *ngIf="game.cards.length === 0">
-  <li>No card</li>
 </ul>

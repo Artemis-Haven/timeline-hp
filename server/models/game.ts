@@ -19,10 +19,18 @@ const gameSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
-  cards: [{
+  deckCards: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Card'
-  }]
+  }],
+  boardCards: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Card'
+  }],
+  handCards: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Card'
+  }],
 });
 
 gameSchema.pre('save', function(next) {
@@ -35,12 +43,12 @@ gameSchema.pre('update', function(next) {
 });
 
 gameSchema.pre('find', function (next) {
-    this.populate('users cards');
+    this.populate('users deckCards boardCards handCards');
     next();
 });
 
 gameSchema.pre('findOne', function (next) {
-    this.populate('users cards');
+    this.populate('users deckCards boardCards handCards');
     next();
 });
 

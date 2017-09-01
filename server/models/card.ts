@@ -18,12 +18,12 @@ const cardSchema = new mongoose.Schema({
   	require: true
   },
   user: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
   game: {
-    type: Number,
-	ref: 'Game'
+    type: mongoose.Schema.Types.ObjectId,
+	  ref: 'Game'
   }
 });
 

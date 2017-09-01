@@ -34,8 +34,7 @@
           <td>
             <button class="btn btn-sm btn-success" (click)="joinGame(game)" *ngIf="!hasJoined(auth.currentUser, game) && !game.started"><i class="fa fa-plus"></i> <!--Rejoindre-->Join</button>
             <button class="btn btn-sm btn-warning" (click)="quitGame(game)" *ngIf="hasJoined(auth.currentUser, game)"><i class="fa fa-times"></i> <!--Quitter la partie-->Quit</button>
-            <button class="btn btn-sm btn-success" (click)="startGame(game)" *ngIf="hasJoined(auth.currentUser, game) && !game.started"><i class="fa fa-check"></i> Start</button>
-            <a class="btn btn-sm btn-primary" [routerLink]="['/game', game._id]" *ngIf="hasJoined(auth.currentUser, game) && game.started"><i class="fa fa-sign-in"></i> Enter</a>
+            <a class="btn btn-sm btn-primary" [routerLink]="['/game', game._id]" *ngIf="hasJoined(auth.currentUser, game)"><i class="fa fa-sign-in"></i> Enter</a>
           </td>
         </tr>  
       </tbody>

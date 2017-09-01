@@ -30,7 +30,9 @@ export class GameComponent implements OnInit {
     // get URL parameters
     this.route.params.subscribe(params => { this.game._id = params.id; });
     this.getGame();
+    this.socket.on('game-updated-'+this.game._id, function() { that.getGame(); });
     this.socket.on('notification', function(data) { that.toast.setMessage(data.message, data.level); });
+    this.socket.emit('initSocket', {id: this.auth.currentUser._id});
   }
 
   ngOnInit() {
@@ -42,6 +44,26 @@ export class GameComponent implements OnInit {
       data => this.game = data,
       error => console.log(error),
       () => this.isLoading = false
+    );
+  }
+
+  drawCard(game) {
+    var user = this.auth.currentUser;
+    this.gameService.drawCard(game, this.auth.currentUser).subscribe(
+      res => {
+        this.game = game;
+        this.toast.setMessage('new card', 'success');
+      },
+      error => console.log(error)
+    );
+  }
+
+  start(game) {
+    this.gameService.start(game).subscribe(
+      res => {
+        this.game = game;
+      },
+      error => console.log(error)
     );
   }
 
