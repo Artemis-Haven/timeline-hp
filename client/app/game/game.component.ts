@@ -59,6 +59,19 @@ export class GameComponent implements OnInit {
     );
   }
 
+  playCard(card, target) {
+    if (card.user != this.auth.currentUser._id) {
+      this.toast.setMessage("you don't own this card.", 'error');
+    } else {
+      var previousCardId = (target.previousElementSibling?target.previousElementSibling.children[0].dataset.id:'NULL')
+      var nextCardId = (target.nextElementSibling?target.nextElementSibling.children[0].dataset.id:'NULL')
+      this.gameService.playCard(this.game, card._id, previousCardId, nextCardId).subscribe(
+        res => { },
+        error => console.log(error)
+      );
+    }
+  }
+
   selectCard(card, select) {
     if (card.user != this.auth.currentUser._id) {
       this.toast.setMessage("you don't own this card.", 'error');

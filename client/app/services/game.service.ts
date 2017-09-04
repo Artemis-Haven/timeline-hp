@@ -37,6 +37,10 @@ export class GameService {
     return this.http.put(`/api/game/draw/${game._id}/${user._id}`, {}).map(res => res.json());
   }
 
+  playCard(game, cardId, previousCardId, nextCardId): Observable<any> {
+    return this.http.put(`/api/game/play/${game._id}`, JSON.stringify({'cardId': cardId, 'previousCardId': previousCardId, 'nextCardId': nextCardId}), this.options);
+  }
+
   start(game): Observable<any> {
     return this.http.put(`/api/game/start/${game._id}`, {}).map(res => res.json());
   }

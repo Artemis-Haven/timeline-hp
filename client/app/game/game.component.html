@@ -23,10 +23,10 @@ Deck : {{game.deckCards.length}} item(s) <button class="btn btn-sm btn-primary" 
 Board : <ng-container *ngIf="game.boardCards.length === 0">No card on board</ng-container>
 <ul>
   <ng-container *ngFor="let card of game.boardCards">
-    <li class="ghost-card" dnd-droppable (onDropSuccess)="simpleDrop=$event">ghostCard</li>
-    <li>{{card.name}}</li>
+    <li class="card ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)">ghostCard</li>
+    <card [card]=card></card>
   </ng-container>
-  <li class="ghost-card" dnd-droppable (onDropSuccess)="simpleDrop=$event">ghostCard</li>
+  <li class="card ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)">ghostCard</li>
 </ul>
 <div *ngIf="simpleDrop">Item was dropped here</div>
 <br>

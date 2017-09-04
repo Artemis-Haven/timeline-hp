@@ -100,6 +100,30 @@ export default class GameCtrl extends BaseCtrl {
     });
   };
 
+  playCard = (req, res) => {
+    this.model.findOne({ _id: req.params.game_id }, (err, game) => {
+      if (err) { return console.error(err); }
+      var card = game.handCards.filter( (c) => c._id == req.body.cardId)[0];
+      var previousCard, nextCard = null
+      if (req.body.previousCardId != null) 
+        previousCard = game.boardCards.filter( (c) => c._id == req.body.previousCardId)[0];
+      if (req.body.nextCardId != null) 
+        nextCard = game.boardCards.filter( (c) => c._id == req.body.nextCardId)[0];
+
+      game.handCards.pull(card._id);
+      card.user = null;
+      game.boardCards.push(card._id);
+      
+      card.save((err, card) => {if (err) {return console.error(err);} });
+      game.save((err, game) => {
+        if (err) {return console.error(err);}
+        global['io'].emit('games-updated', { msg: 'Welcome bro!' }); 
+        global['io'].emit('game-updated-'+game._id, { game: game }); 
+        res.status(200).json(game);
+      });
+    });
+  };
+
   // Update by id
   update = (req, res) => {
     delete req.body._id;
