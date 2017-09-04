@@ -22,6 +22,7 @@ import { AdminComponent } from './admin/admin.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { BrowserModule } from '@angular/platform-browser';
+import { DndModule } from 'ng2-dnd';
 
 const config: SocketIoConfig = { url: 'http://localhost:8090', options: {} };
 
@@ -43,7 +44,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8090', options: {} };
     RoutingModule,
     SharedModule,
     BrowserModule,
-    SocketIoModule.forRoot(config) 
+    SocketIoModule.forRoot(config),
+    DndModule.forRoot() 
   ],
   providers: [
     AuthService,
