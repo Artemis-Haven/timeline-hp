@@ -20,21 +20,20 @@ Users :
 Deck : {{game.deckCards.length}} item(s) <button class="btn btn-sm btn-primary" (click)="drawCard(game)" *ngIf="game.deckCards.length > 0">Draw</button>
 <br>
 
-Board :
-<ul *ngIf="game.boardCards.length === 0">
-  <li>No card on board</li>
+Board : <ng-container *ngIf="game.boardCards.length === 0">No card on board</ng-container>
+<ul>
+  <ng-container *ngFor="let card of game.boardCards">
+    <li class="ghost-card" dnd-droppable (onDropSuccess)="simpleDrop=$event">ghostCard</li>
+    <li>{{card.name}}</li>
+  </ng-container>
+  <li class="ghost-card" dnd-droppable (onDropSuccess)="simpleDrop=$event">ghostCard</li>
 </ul>
-<ul *ngFor="let card of game.boardCards">
-  <li>{{card.name}}</li>
-</ul>
+<div *ngIf="simpleDrop">Item was dropped here</div>
 <br>
 
 Hand :
-<ul *ngFor="let card of game.handCards">
-  <li *ngIf="card.user == auth.currentUser._id">
-  	<div (mousedown)="selectCard(card, true)" (mouseup)="selectCard(card, false)" (focusout)="selectCard(card, false)">
-      <span *ngIf="!card.selected">{{card.name}}</span>
-      <strong *ngIf="card.selected">{{card.name}}</strong>
-    </div>
-  </li>
-</ul>
+<ng-container *ngFor="let card of game.handCards">
+  <ng-container *ngIf="card.user == auth.currentUser._id">
+    <card [card]=card></card>
+  </ng-container>
+</ng-container>
