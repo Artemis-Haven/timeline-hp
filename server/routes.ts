@@ -1,10 +1,10 @@
 import * as express from 'express';
 
-import CatCtrl from './controllers/cat';
+import ReferenceCtrl from './controllers/reference';
 import GameCtrl from './controllers/game';
 import CardCtrl from './controllers/card';
 import UserCtrl from './controllers/user';
-import Cat from './models/cat';
+import Reference from './models/reference';
 import Game from './models/game';
 import Card from './models/card';
 import User from './models/user';
@@ -13,18 +13,18 @@ export default function setRoutes(app) {
 
   const router = express.Router();
 
-  const catCtrl = new CatCtrl();
+  const referenceCtrl = new ReferenceCtrl();
   const gameCtrl = new GameCtrl();
   const cardCtrl = new CardCtrl();
   const userCtrl = new UserCtrl();
 
-  // Cats
-  router.route('/cats').get(catCtrl.getAll);
-  router.route('/cats/count').get(catCtrl.count);
-  router.route('/cat').post(catCtrl.insert);
-  router.route('/cat/:id').get(catCtrl.get);
-  router.route('/cat/:id').put(catCtrl.update);
-  router.route('/cat/:id').delete(catCtrl.delete);
+  // Reference
+  router.route('/references').get(referenceCtrl.getAll);
+  router.route('/references/count').get(referenceCtrl.count);
+  router.route('/reference').post(referenceCtrl.insert);
+  router.route('/reference/:id').get(referenceCtrl.get);
+  router.route('/reference/:id').put(referenceCtrl.update);
+  router.route('/reference/:id').delete(referenceCtrl.delete);
 
   // Games
   router.route('/games').get(gameCtrl.getAll);

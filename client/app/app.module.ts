@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { RoutingModule } from './routing.module';
 import { SharedModule } from './shared/shared.module';
-import { CatService } from './services/cat.service';
+import { ReferenceService } from './services/reference.service';
 import { GameService } from './services/game.service';
 import { CardService } from './services/card.service';
 import { UserService } from './services/user.service';
@@ -10,7 +10,7 @@ import { AuthService } from './services/auth.service';
 import { AuthGuardLogin } from './services/auth-guard-login.service';
 import { AuthGuardAdmin } from './services/auth-guard-admin.service';
 import { AppComponent } from './app.component';
-import { CatsComponent } from './cats/cats.component';
+import { ReferenceComponent } from './reference/reference.component';
 import { GamesComponent } from './games/games.component';
 import { GameComponent } from './game/game.component';
 import { CardComponent } from './game/card.component';
@@ -30,7 +30,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8090', options: {} };
 @NgModule({
   declarations: [
     AppComponent,
-    CatsComponent,
+    ReferenceComponent,
     GamesComponent,
     GameComponent,
     CardComponent,
@@ -53,7 +53,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8090', options: {} };
     AuthService,
     AuthGuardLogin,
     AuthGuardAdmin,
-    CatService,
+    ReferenceService,
     GameService,
     CardService,
     UserService

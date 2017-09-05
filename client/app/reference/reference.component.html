@@ -1,0 +1,85 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card" *ngIf="!isLoading">
+  <h4 class="card-header">
+    Actuellement : 
+    {{references.length == 0 ? 'Aucune carte référencée' : ''}} 
+    {{references.length == 1 ? '1 carte référencée' : ''}} 
+    {{references.length > 1 ? references.length+' cartes référencées' : ''}} 
+  </h4>
+  <div class="card-block">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+        <tr>
+          <th>Titre</th>
+          <th>Date affichée</th>
+          <th>Date de début</th>
+          <th>Date de fin</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="references.length === 0">
+        <tr>
+          <td colspan="4">La liste de cartes est vide. Ajoutez des cartes ci-dessous.</td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="!isEditing">
+        <tr *ngFor="let reference of references">
+          <td>{{reference.name}}</td>
+          <td>{{reference.displayedDate}}</td>
+          <td>{{reference.startDate|date:'dd/MM/yyyy'}}</td>
+          <td>{{reference.endDate|date:'dd/MM/yyyy'}}</td>
+          <td class="text-nowrap">
+            <button class="btn btn-sm btn-warning" title="Modifier" (click)="enableEditing(reference)"><i class="fa fa-pencil"></i></button>
+            <button class="btn btn-sm btn-danger" title="Supprimer" (click)="deleteReference(reference)"><i class="fa fa-trash"></i></button>
+          </td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="isEditing">
+        <tr>
+          <td colspan="5">
+            <form class="form-inline" #form="ngForm" (ngSubmit)="editReference(reference)" style="display:inline">
+              <div class="form-group">
+                  <input class="form-control" type="text" name="name" [(ngModel)]="reference.name" placeholder="Name" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="text" name="displayedDate" [(ngModel)]="reference.displayedDate" placeholder="Date affichée" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="text" name="startDate" [(ngModel)]="reference.startDate" placeholder="Date de début" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="text" name="endDate" [(ngModel)]="reference.endDate" placeholder="Date de fin" required>
+              </div>
+              <button class="btn btn-sm btn-primary" type="submit" title="Enregistrer" [disabled]="!form.form.valid"><i class="fa fa-floppy-o"></i></button>
+            </form>
+            <button class="btn btn-sm btn-warning" title="Annuler" (click)="cancelEditing()"><i class="fa fa-times"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" *ngIf="!isEditing">
+  <h4 class="card-header">Ajouter une nouvelle carte</h4>
+  <div class="card-block">
+    <form class="form-inline" [formGroup]="addReferenceForm" (ngSubmit)="addReference()" style="text-align:center">
+      <div class="form-group">
+          <input class="form-control" type="text" name="name" formControlName="name" placeholder="Titre">
+      </div>
+      <div class="form-group">
+        <input class="form-control" type="text" name="displayedDate" formControlName="displayedDate" placeholder="Date affichée">
+      </div>
+      <div class="form-group">
+        <input class="form-control" type="text" name="startDate" formControlName="startDate" placeholder="Date de début" >
+      </div>
+      <div class="form-group">
+        <input class="form-control" type="text" name="endDate" formControlName="endDate" placeholder="Date de fin" >
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="!addReferenceForm.valid"><i class="fa fa-floppy-o"></i>&nbsp; Enregistrer</button>
+    </form>
+  </div>
+</div>
