@@ -1,6 +1,7 @@
 import Game from '../models/game';
 import Card from '../models/card';
 import User from '../models/user';
+import Reference from '../models/reference';
 import BaseCtrl from './base';
 
 export default class GameCtrl extends BaseCtrl {
@@ -15,7 +16,6 @@ export default class GameCtrl extends BaseCtrl {
   insert = (req, res) => {
     console.log("Création d'une nouvelle partie...");
     const game = new Game(req.body.game);
-    console.log(Object.keys(req.body.game));
     game.users.push(req.body.user);
     game.save((err, item) => {
       // 11000 is the code for duplicate key error
@@ -30,25 +30,22 @@ export default class GameCtrl extends BaseCtrl {
     global['io'].emit('games-updated', { msg: 'Welcome bro!' });
     global['io'].emit('message', { message: 'Welcome bro!', label: 'info' });
     res.status(200).json(game);
-    var deckCards = [
-      new Card({name: "Name1", displayedDate: "2017", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name2", displayedDate: "2016", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name3", displayedDate: "2015", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name4", displayedDate: "2014", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name5", displayedDate: "2013", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name6", displayedDate: "2012", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name7", displayedDate: "2017", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name8", displayedDate: "2016", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name9", displayedDate: "2015", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name10", displayedDate: "2014", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name11", displayedDate: "2013", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-      new Card({name: "Name12", displayedDate: "2012", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
-    ];
-    deckCards = this.shuffleCards(deckCards);
-    for (var i = 0; i < deckCards.length; i++) {
-      game.deckCards.push(deckCards[i]);
-      deckCards[i].save((err, item) => { return console.error(err); });
-    }
+    Reference.find({}, (err, references) => {
+      if (err) { return console.error(err); }
+      references = this.shuffleCards(references);
+      for (var i = 0; i < references.length; i++) {
+        var card = new Card({
+          'name': references[i].name, 
+          'displayedDate': references[i].displayedDate, 
+          'startDate': references[i].startDate, 
+          'endDate': references[i].endDate, 
+          'game': game
+        });
+        game.deckCards.push(card);
+        card.save((err, item) => { if (err) return console.error(err); });
+      }
+      game.save((err, item) => { if (err) return console.error(err); });
+    });
   };
 
   // join game

@@ -6,7 +6,7 @@ const cardSchema = new mongoose.Schema({
   	require: true
   },
   displayedDate: {
-  	type: Date,
+  	type: String,
   	require: true
   },
   startDate: {
