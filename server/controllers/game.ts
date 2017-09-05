@@ -13,6 +13,18 @@ export default class GameCtrl extends BaseCtrl {
     return cardsArray
   }
 
+  private nextTurn(game) {
+    if (game.turn == null)
+      game.turn = game.users[0]
+    else
+      for (var i = 0; i < game.users.length; i++) {
+        if (JSON.stringify(game.turn) == JSON.stringify(game.users[i])) {
+          game.turn = game.users[(i+1)%game.users.length]
+          break
+        }
+      }
+  }
+
   insert = (req, res) => {
     console.log("Création d'une nouvelle partie...");
     const game = new Game(req.body.game);
@@ -84,6 +96,7 @@ export default class GameCtrl extends BaseCtrl {
       var card = game.deckCards[0];
       game.deckCards.pull(card._id);
       game.boardCards.push(card._id);
+      this.nextTurn(game);
       card.save((err, card) => {if (err) {return console.error(err);} });
       game.save((err, game) => {
         if (err) {return console.error(err);}
@@ -123,6 +136,7 @@ export default class GameCtrl extends BaseCtrl {
       game.handCards.pull(card._id);
       card.user = null;
       game.boardCards.push(card._id);
+      this.nextTurn(game);
       
       card.save((err, card) => {if (err) {return console.error(err);} });
       game.save((err, game) => {

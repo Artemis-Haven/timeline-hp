@@ -15,6 +15,10 @@ const gameSchema = new mongoose.Schema({
     require: true,
     default: false
   },
+  turn: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
   users: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -43,12 +47,12 @@ gameSchema.pre('update', function(next) {
 });
 
 gameSchema.pre('find', function (next) {
-    this.populate('users deckCards boardCards handCards');
+    this.populate('users deckCards boardCards handCards turn');
     next();
 });
 
 gameSchema.pre('findOne', function (next) {
-    this.populate('users deckCards boardCards handCards');
+    this.populate('users deckCards boardCards handCards turn');
     next();
 });
 
