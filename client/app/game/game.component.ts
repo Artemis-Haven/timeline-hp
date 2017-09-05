@@ -66,7 +66,9 @@ export class GameComponent implements OnInit {
       var previousCardId = (target.previousElementSibling?target.previousElementSibling.children[0].dataset.id:'NULL')
       var nextCardId = (target.nextElementSibling?target.nextElementSibling.children[0].dataset.id:'NULL')
       this.gameService.playCard(this.game, card._id, previousCardId, nextCardId).subscribe(
-        res => { },
+        res => {
+          alert(res.json().success?'Success :)':'Failure :(')
+        },
         error => console.log(error)
       );
     }

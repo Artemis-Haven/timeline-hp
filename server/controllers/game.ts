@@ -126,24 +126,29 @@ export default class GameCtrl extends BaseCtrl {
   playCard = (req, res) => {
     this.model.findOne({ _id: req.params.game_id }, (err, game) => {
       if (err) { return console.error(err); }
-      var card = game.handCards.filter( (c) => c._id == req.body.cardId)[0];
+      
+      var card = game.handCards.filter( (c) => c._id == req.body.cardId)[0]
       var previousCard, nextCard = null
-      if (req.body.previousCardId != null) 
-        previousCard = game.boardCards.filter( (c) => c._id == req.body.previousCardId)[0];
-      if (req.body.nextCardId != null) 
-        nextCard = game.boardCards.filter( (c) => c._id == req.body.nextCardId)[0];
+      var failure = false
+      previousCard = game.boardCards.filter( (c) => c._id == req.body.previousCardId)[0]
+      nextCard = game.boardCards.filter( (c) => c._id == req.body.nextCardId)[0]
+      if (previousCard != null && previousCard.startDate > card.endDate)
+        failure = true;
+      if (nextCard != null && nextCard.endDate < card.startDate)
+        failure = true;
 
-      game.handCards.pull(card._id);
-      card.user = null;
-      game.boardCards.push(card._id);
-      this.nextTurn(game);
+      game.handCards.pull(card._id)
+      card.user = null
+      game.boardCards.push(card._id)
+
+      if (!failure) 
+        this.nextTurn(game)
       
       card.save((err, card) => {if (err) {return console.error(err);} });
       game.save((err, game) => {
         if (err) {return console.error(err);}
-        global['io'].emit('games-updated', { msg: 'Welcome bro!' }); 
-        global['io'].emit('game-updated-'+game._id, { game: game }); 
-        res.status(200).json(game);
+        global['io'].emit('game-updated-'+game._id, { game: game, type:'cardPlayed', success: !failure }); 
+        res.status(200).send({success: !failure, displayedDate: card.displayedDate, startDate: card.startDate, endDate: card.endDate});
       });
     });
   };
