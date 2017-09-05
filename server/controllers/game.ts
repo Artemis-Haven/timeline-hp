@@ -6,6 +6,12 @@ import BaseCtrl from './base';
 export default class GameCtrl extends BaseCtrl {
   model = Game;
 
+  private shuffleCards(cardsArray) {
+    cardsArray = cardsArray.sort((c1, c2) => (Math.random() >= 0.5))
+    cardsArray = cardsArray.sort((c1, c2) => (Math.random() >= 0.5))
+    return cardsArray
+  }
+
   insert = (req, res) => {
     console.log("Création d'une nouvelle partie...");
     const game = new Game(req.body.game);
@@ -31,7 +37,14 @@ export default class GameCtrl extends BaseCtrl {
       new Card({name: "Name4", displayedDate: "2014", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
       new Card({name: "Name5", displayedDate: "2013", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
       new Card({name: "Name6", displayedDate: "2012", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
+      new Card({name: "Name7", displayedDate: "2017", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
+      new Card({name: "Name8", displayedDate: "2016", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
+      new Card({name: "Name9", displayedDate: "2015", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
+      new Card({name: "Name10", displayedDate: "2014", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
+      new Card({name: "Name11", displayedDate: "2013", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
+      new Card({name: "Name12", displayedDate: "2012", startDate: '2017-01-01', endDate: '2017-01-01', game: game}),
     ];
+    deckCards = this.shuffleCards(deckCards);
     for (var i = 0; i < deckCards.length; i++) {
       game.deckCards.push(deckCards[i]);
       deckCards[i].save((err, item) => { return console.error(err); });
