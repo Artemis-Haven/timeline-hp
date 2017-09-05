@@ -11,29 +11,36 @@
 </div>
 <div class="row max-size">
   <section class="max-size col-md-9">
-    <div id="board">
-      <ng-container *ngIf="game.boardCards.length === 0">No card on board</ng-container>
-      <ng-container *ngIf="game.boardCards.length > 0">
-        <ng-container *ngFor="let card of game.boardCards">
+    <div id="board-container">
+      <div id="board">
+        <ng-container *ngIf="game.boardCards.length === 0">No card on board</ng-container>
+        <ng-container *ngIf="game.boardCards.length > 0">
+          <ng-container *ngFor="let card of game.boardCards">
+            <div class="ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)">ghostCard</div>
+            <card [card]=card></card>
+          </ng-container>
           <div class="ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)">ghostCard</div>
-          <card [card]=card></card>
         </ng-container>
-        <div class="ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)">ghostCard</div>
-      </ng-container>
+      </div>
     </div>
     <br>
 
-    <div id="hand">
-      <ng-container *ngFor="let card of game.handCards">
-        <ng-container *ngIf="card.user == auth.currentUser._id">
-          <card [card]=card></card>
+    <div id="hand-container">
+      <br>
+      <h3>Votre main :</h3>
+      <div id="hand">
+        <ng-container *ngFor="let card of game.handCards">
+          <ng-container *ngIf="card.user == auth.currentUser._id">
+            <card [card]=card></card>
+          </ng-container>
         </ng-container>
-      </ng-container>
+      </div>
     </div>
   </section>
 
   <aside class="col-md-3">
     <div id="opponents">
+      <h3>Vos adversaires :</h3>
       <ng-container *ngFor="let user of game.users">
         <ng-container *ngIf="user._id != auth.currentUser._id">
           <opponent [user]=user [cards]=game.handCards></opponent>
