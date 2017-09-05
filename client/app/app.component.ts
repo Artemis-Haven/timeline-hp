@@ -8,8 +8,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
 
-  //title = 'Timeline H.P.';
-  title = 'Tutorial';
+  title = 'Timeline H.P.';
 
   constructor(public auth: AuthService) { }
 

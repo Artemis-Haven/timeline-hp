@@ -1,10 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-  margin-top: 15px;
-  margin-bottom: 10px;
+  height: 100%;
 }
 
 .input-group {
   margin-bottom: 15px;
+}
+
+html {
+	background-color: #fff;
+	padding: 15px 0px;
+	margin: 0;
+	height: 100%;
+}
+
+html, body, .max-size {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;    
+}
+.max-size > * {
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+}
+html > *, body > *, .max-size > .max-size {
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+app-game, .max-size.container-fluid {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }

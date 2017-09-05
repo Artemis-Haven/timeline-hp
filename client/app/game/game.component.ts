@@ -11,7 +11,8 @@ import { Socket } from 'ng-socket-io';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
-  styleUrls: ['../games/games.component.scss'],
+  styleUrls: ['../game/game.component.scss'],
+  host: {'class': 'max-size'},
   providers: [GameService]
 })
 export class GameComponent implements OnInit {

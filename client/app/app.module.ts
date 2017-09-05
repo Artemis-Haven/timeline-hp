@@ -14,6 +14,7 @@ import { ReferenceComponent } from './reference/reference.component';
 import { GamesComponent } from './games/games.component';
 import { GameComponent } from './game/game.component';
 import { CardComponent } from './game/card.component';
+import { OpponentComponent } from './game/opponent.component';
 import { AboutComponent } from './about/about.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
@@ -34,6 +35,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8090', options: {} };
     GamesComponent,
     GameComponent,
     CardComponent,
+    OpponentComponent,
     AboutComponent,
     RegisterComponent,
     LoginComponent,
