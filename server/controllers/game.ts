@@ -139,7 +139,12 @@ export default class GameCtrl extends BaseCtrl {
 
       game.handCards.pull(card._id)
       card.user = null
-      game.boardCards.push(card._id)
+      if (previousCard == null)
+        game.boardCards.unshift(card._id)
+      else if (nextCard == null)
+        game.boardCards.push(card._id)
+      else
+        game.boardCards.splice(game.boardCards.findIndex((c) => c._id == previousCard._id)+1, 0, card._id)
 
       if (!failure) 
         this.nextTurn(game)
