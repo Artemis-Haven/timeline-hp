@@ -44,11 +44,41 @@ section {
     -webkit-flex: 0 1 auto;
     -ms-flex: 0 1 auto;
     flex: 0 1 auto;
+    min-height: 200px;
 }
 
+#board {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
 
+.board-row {
+    /* Alignement des cartes DANS #board et #hand */
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-justify-content: space-around;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    -webkit-align-content: space-around;
+    -ms-flex-line-pack: distribute;
+    align-content: space-around;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
 
-#board, #hand, .opponentCards {
+#hand, .opponentCards {
     /* Alignement des cartes DANS #board et #hand */
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -124,8 +154,22 @@ section {
     -webkit-flex: 1 1 auto;
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
+
+    /* Pour centrer le contenu de la ghost-card */
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
 }
 .ghost-card.dnd-drag-over {
     width: 100px;
     opacity: 0.5;
+}
+.ghost-card > div {
+    display: inline-block;
+    height: 1px;
+    width: 1px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    box-shadow: 0 0 30px 30px rgb(0, 0, 0);
+    margin: auto;
 }

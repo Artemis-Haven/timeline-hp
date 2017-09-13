@@ -19,6 +19,7 @@ export class GameComponent implements OnInit {
 
   game = {_id: null};
   isLoading = false;
+  maxCardsInRow = 5;
 
   constructor(private gameService: GameService,
               private cardService: CardService,
@@ -65,10 +66,14 @@ export class GameComponent implements OnInit {
       this.toast.setMessage("you don't own this card.", 'error');
     } else {
       var previousCardId = (target.previousElementSibling?target.previousElementSibling.children[0].dataset.id:'NULL')
+      if (previousCardId == 'NULL')
+        var previousCardId = (target.parentElement.previousElementSibling?target.parentElement.previousElementSibling.children[1].children[0].dataset.id:'NULL')
       var nextCardId = (target.nextElementSibling?target.nextElementSibling.children[0].dataset.id:'NULL')
+      if (nextCardId == 'NULL')
+        var nextCardId = (target.parentElement.nextElementSibling?target.parentElement.nextElementSibling.children[1].children[0].dataset.id:'NULL')
       this.gameService.playCard(this.game, card._id, previousCardId, nextCardId).subscribe(
         res => {
-          alert(res.json().success?'Success :)':'Failure :(')
+          //alert(res.json().success?'Success :)':'Failure :(')
         },
         error => console.log(error)
       );
@@ -96,5 +101,13 @@ export class GameComponent implements OnInit {
     );
   }
 
+
+  createRange(number){
+    var items: number[] = [];
+    for(var i = 0; i < number; i++){
+       items.push(i);
+    }
+    return items;
+  }
 
 }

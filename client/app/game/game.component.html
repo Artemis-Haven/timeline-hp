@@ -14,12 +14,15 @@
     <div id="board-container">
       <div id="board">
         <ng-container *ngIf="game.boardCards.length === 0">No card on board</ng-container>
-        <ng-container *ngIf="game.boardCards.length > 0">
-          <ng-container *ngFor="let card of game.boardCards">
-            <div class="ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)">ghostCard</div>
-            <card [card]=card></card>
-          </ng-container>
-          <div class="ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)">ghostCard</div>
+
+        <ng-container *ngFor="let i of createRange(game.boardCards.length/maxCardsInRow)">
+          <div class="board-row">
+            <ng-container *ngFor="let card of game.boardCards|slice:i*maxCardsInRow:(i+1)*maxCardsInRow">
+              <div class="ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)"><div></div></div>
+              <card [card]=card></card>
+            </ng-container>
+            <div class="ghost-card" dnd-droppable (onDropSuccess)="playCard($event.dragData, $event.mouseEvent.target)"><div></div></div>
+          </div>
         </ng-container>
       </div>
     </div>
